@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Piscis Inventario</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<title>Eventos Piscis</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:Arial;background:#f5f7fb;color:#172033}button,input,select{font:inherit}button{border:0;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer}.primary{background:#172033;color:#fff}.secondary{background:#eef2f7}.danger{background:#fee2e2;color:#991b1b}.edit{background:#eef2ff;color:#3730a3}
 .login{min-height:100vh;display:grid;place-items:center;padding:20px}.box{background:#fff;width:min(430px,100%);padding:28px;border-radius:20px;box-shadow:0 12px 40px #0002;text-align:center}.logo{width:155px;height:155px;margin:0 auto 12px;display:block;object-fit:cover;border-radius:22px}.field{text-align:left;margin:14px 0}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}.field input{width:100%;padding:11px;border:1px solid #d7dce5;border-radius:10px}.full{width:100%}.error{display:none;background:#fee2e2;color:#991b1b;padding:10px;border-radius:9px;text-align:left;font-size:13px}
@@ -9,15 +9,15 @@ main{max-width:1200px;margin:auto;padding:22px 18px}.notice{padding:13px;border-
 .modal{display:none;position:fixed;inset:0;background:#0008;place-items:center;padding:20px}.show{display:grid}.modalbox{background:#fff;border-radius:17px;padding:22px;width:min(650px,100%)}.form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.modal-actions{grid-column:1/-1;display:flex;justify-content:flex-end;gap:8px}@media(max-width:750px){.kpis{grid-template-columns:1fr}.topin,.toolbar{flex-direction:column;align-items:stretch}.tools{flex-direction:column}.form{grid-template-columns:1fr}}
 </style></head><body>
 <section id="login" class="login"><div class="box">
-<img class="logo" src="./logo.webp" alt="Piscis Inventario">
-<h1>Bienvenido a Piscis Inventario</h1><p class="muted">Eventos que enamoran</p><div id="err" class="error">Correo o contraseña incorrectos.</div>
+<img class="logo" src="./logo.webp" alt="Eventos Piscis">
+<h1>Bienvenido a Eventos Piscis</h1><p class="muted">Eventos que enamoran</p><div id="err" class="error">Correo o contraseña incorrectos.</div>
 <div class="field"><label>Correo</label><input id="email" type="email"></div><div class="field"><label>Contraseña</label><input id="pass" type="password"></div>
 <button id="loginBtn" class="primary full">Entrar</button><button id="resetBtn" type="button" class="secondary full" style="margin-top:10px">Restablecer contraseña</button></div></section>
 <section id="app" class="app"><header class="top"><div class="topin"><div class="brand">
-<img class="mini" src="./logo.webp" alt="Piscis Inventario">
-<div><h1>Bienvenido a Piscis Inventario</h1><div class="muted">Eventos que enamoran</div></div></div>
+<img class="mini" src="./logo.webp" alt="Eventos Piscis">
+<div><h1>Bienvenido a Eventos Piscis</h1><div class="muted">Eventos que enamoran</div></div></div>
 <div class="actions"><span id="role" class="role"></span><button id="logout" class="secondary">Cerrar sesión</button><button id="add" class="primary">＋ Agregar producto</button></div></div></header>
-<main><div id="notice" class="notice"></div><div class="welcome"><h2>Inventario de Piscis</h2><div class="muted">Control de existencias sincronizado en línea.</div></div>
+<main><div id="notice" class="notice"></div><div class="welcome"><h2>Inventario de Eventos Piscis</h2><div class="muted">Control de existencias sincronizado en línea.</div></div>
 <section class="kpis"><div class="card"><div class="kpi-title">📦 Unidades en inventario</div><div id="units" class="kpi">0</div></div><div class="card"><div class="kpi-title">⚠️ Stock bajo</div><div id="low" class="kpi">0</div></div><div class="card"><div class="kpi-title">📋 Productos registrados</div><div id="count" class="kpi">0</div></div></section>
 <div class="card"><div class="toolbar"><div><h2 style="margin:0">Inventario</h2><div id="help" class="muted"></div></div><div class="tools"><input id="search" placeholder="🔎 Buscar..."><select id="filter"></select></div></div>
 <div class="table"><table><thead><tr><th>ID</th><th>Producto</th><th>Categoría</th><th>Stock</th><th>Mínimo</th><th>Proveedor</th><th>Precio</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="tbody"></tbody></table></div></div></main></section>
