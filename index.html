@@ -94,12 +94,14 @@ async function exportInventory(){
     if(invErr||notesErr||itemErr){
       const msg=invErr?.message||notesErr?.message||itemErr?.message||"No se pudo preparar el reporte.";
       w.document.body.innerHTML="<p style='font-family:Arial;padding:20px'>"+esc(msg)+"</p>";
+      if(btn){btn.disabled=false;btn.textContent="Exportar y cerrar periodo";}
       return;
     }
 
     const{data:closed,error:closeErr}=await sb.rpc("close_inventory_period");
     if(closeErr){
       w.document.body.innerHTML="<p style='font-family:Arial;padding:20px'>No se cerró el periodo: "+esc(closeErr.message)+"</p>";
+      if(btn){btn.disabled=false;btn.textContent="Exportar y cerrar periodo";}
       return;
     }
 
