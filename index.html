@@ -9,7 +9,7 @@
 .note-close{width:42px;height:42px;padding:0;border-radius:12px;background:#ffffff18;color:#fff;font-size:20px;border:1px solid #ffffff22}
 .note-body{padding:22px 24px 20px;max-height:74vh;overflow:auto}
 .note-intro{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}.note-intro h3{margin:0 0 4px;font-size:16px}.note-intro p{margin:0;color:#697386;font-size:13px}
-.note-summary{display:flex;gap:8px;flex-wrap:wrap}.note-chip{padding:8px 11px;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc;font-size:12px;font-weight:700;color:#475569}.note-chip strong{color:#172033}
+.note-summary{display:flex;gap:8px;flex-wrap:wrap}.note-summary-bottom{justify-content:flex-end;margin-top:10px;padding-top:10px;border-top:1px solid #edf0f3}.note-chip{padding:8px 11px;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc;font-size:12px;font-weight:700;color:#475569}.note-chip strong{color:#172033}
 .note-section{border:1px solid #e5e7eb;border-radius:16px;padding:16px;margin-bottom:16px}.note-section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.note-section-title h4{margin:0;font-size:14px}.note-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .note-field label{display:block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:#64748b;margin-bottom:6px}.note-field input{width:100%;padding:11px 12px;border:1px solid #d7dce5;border-radius:10px;background:#fff;outline:none}.note-field input:focus,.note-product:focus,.note-qty:focus{border-color:#172033;box-shadow:0 0 0 3px #17203310}
 .note-products{overflow:auto;border:1px solid #e5e7eb;border-radius:13px}.note-products table{min-width:700px;margin:0}.note-products th{padding:11px 12px;background:#f8fafc}.note-products td{padding:12px;background:#fff;vertical-align:middle}
@@ -33,7 +33,7 @@
   <div class="note-head-right"><span id="noteBadge" class="note-badge">NOTA DE SALIDA</span><button id="noteClose" class="note-close">×</button></div>
 </div>
 <div class="note-body">
-  <div class="note-intro"><div><h3 id="noteTitle">Nota de salida</h3><p>Registra varios productos y todos los datos de la operación.</p></div><div class="note-summary"><span class="note-chip">Productos <strong id="noteCount">0</strong></span><span class="note-chip">Unidades <strong id="noteUnits">0</strong></span><span class="note-chip">Importe <strong id="noteTotal">$0</strong></span></div></div>
+  <div class="note-intro"><div><h3 id="noteTitle">Nota de salida</h3><p>Registra varios productos y todos los datos de la operación.</p></div></div>
 
   <div class="note-section"><div class="note-section-title"><h4>Datos del cliente</h4></div>
     <div class="note-grid">
@@ -66,7 +66,7 @@
     <div class="note-products"><table><thead><tr><th>Producto</th><th>Disponible</th><th>Cantidad</th><th>Precio</th><th></th></tr></thead><tbody id="noteItems"></tbody></table></div>
   </div>
 
-  <div class="note-bottom"><div class="note-bottom-info">El sistema guarda automáticamente quién hizo la nota y la fecha/hora de creación.</div><div class="note-actions"><button id="noteCancel" type="button" class="secondary">Cancelar</button><button id="noteSave" type="button" class="primary note-save">Guardar y generar nota</button></div></div>
+  <div class="note-bottom"><div class="note-bottom-info">El sistema guarda automáticamente quién hizo la nota y la fecha/hora de creación.</div><div class="note-actions"><button id="noteCancel" type="button" class="secondary">Cancelar</button><button id="noteSave" type="button" class="primary note-save">Guardar y generar nota</button></div></div><div class="note-summary note-summary-bottom"><span class="note-chip">Productos <strong id="noteCount">0</strong></span><span class="note-chip">Unidades <strong id="noteUnits">0</strong></span><span class="note-chip">Importe <strong id="noteTotal">$0</strong></span></div>
 </div></div></div><div id="historyModal" class="modal"><div class="modalbox"><div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0">Historial de movimientos</h2><button id="historyClose" class="secondary">✕</button></div><div class="history-tools"><select id="historyProduct"><option value="">Todos los productos</option></select><select id="historyType"><option value="">Todos los movimientos</option><option value="entrada">Entradas</option><option value="salida">Salidas</option></select><input id="historyDate" type="date"><button id="historyClear" class="secondary">Limpiar filtros</button></div><div class="table"><table class="hist"><thead><tr><th>Fecha</th><th>Producto</th><th>Movimiento</th><th>Cantidad</th><th>Nota</th><th>Usuario</th></tr></thead><tbody id="historyBody"></tbody></table></div></div></div>
 <script>
 const sb=supabase.createClient("https://tidtztvwcaxsaaxabfcu.supabase.co","sb_publishable_iHoViwllZWoKxkIu6BClOg_E28uJrPI",{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});let role="employee",items=[],channel=null,moveProductId=null,historyRows=[];
