@@ -520,7 +520,7 @@ async function loadReports(){
   $("reportUsers").innerHTML=userIds.map(id=>{
     const a=activity[id]||{mov:0,out:0,ret:0,maint:0,cancel:0},u=auditMap[id]||{role:"Usuario",email:"ID "+id};
     const total=a.mov+a.out+a.ret+a.cancel+a.maint;
-    return '<tr><td><span class="report-user-name">'+esc(u.role)+'</span><span class="report-user-email">'+esc(u.email)+'</span></td><td class="report-user-num">'+a.mov+'</td><td class="report-user-num">'+a.out+'</td><td class="report-user-num">'+a.ret+'</td><td class="report-user-num">'+a.cancel+'</td><td class="report-user-num">'+a.maint+'</td><td class="report-user-num">'+total+'</td></tr>';
+    return '<tr><td><span class="report-user-name">'+esc(u.name||u.role)+'</span></td><td class="report-user-num">'+a.mov+'</td><td class="report-user-num">'+a.out+'</td><td class="report-user-num">'+a.ret+'</td><td class="report-user-num">'+a.cancel+'</td><td class="report-user-num">'+a.maint+'</td><td class="report-user-num">'+total+'</td></tr>';
   }).join("")||'<tr><td colspan="7" class="report-empty">Sin actividad registrada en el periodo.</td></tr>';
 
   $("reportPending").innerHTML=reportRowsHtml(pending.slice(0,8).map(x=>'<div class="report-item"><span><b>'+esc(x.client||"Sin cliente")+'</b><br><small>'+esc(x.note_number)+' · '+esc(x.event_name||"Sin evento")+(x.pickup_date?" · "+new Date(x.pickup_date+"T00:00:00").toLocaleDateString("es-MX"):"")+'</small></span><span class="report-number">'+(x.return_status==="parcial"?"Parcial":"Pendiente")+'</span></div>'),'No hay rentas pendientes de regreso.');
