@@ -674,12 +674,19 @@ function renderReturnFolioOptions(query){
 
 function addNoteRow(){const empty=$("noteItemsEmpty");if(empty)empty.remove();const tr=document.createElement("tr");const opts=items.map(x=>'<option value="'+esc(x.id)+'" data-stock="'+x.stock+'" data-maint="'+(x.maintenance||0)+'" data-reserved="'+(x.reserved||0)+'" data-price="'+x.price+'">'+esc(x.product)+'</option>').join("");tr.innerHTML='<td><select class="note-product">'+opts+'</select></td><td><span class="note-stock-pill note-stock">0</span></td><td><input class="note-qty" type="number" min="1" value="1"></td><td class="note-price-cell note-price">$0</td><td><button type="button" class="danger note-remove">Quitar</button></td>';$("noteItems").appendChild(tr);const sel=tr.querySelector(".note-product");const qty=tr.querySelector(".note-qty");const sync=()=>{const o=sel.options[sel.selectedIndex];const stock=Number(o?.dataset.stock||0),maint=Number(o?.dataset.maint||0),reserved=Number(o?.dataset.reserved||0);const available=Math.max(0,stock-maint-reserved);tr.querySelector(".note-stock").textContent=noteType==="salida"?available:stock;tr.querySelector(".note-price").textContent=money(Number(o?.dataset.price||0));updateNoteSummary()};sel.onchange=sync;qty.oninput=updateNoteSummary;$("noteReturnSearch").oninput=e=>renderReturnFolioOptions(e.target.value);
 $("noteReturnFolio").onchange=()=>{const v=$("noteReturnFolio").value;if(v&&$("noteReturnSearch"))$("noteReturnSearch").value=(returnNoteOptions.find(x=>x.note_number===v)?.client||"");};
+$("noteDiscount").oninput=updateNoteSummary;tr.querySelector(".note-remove").onclick=()=>{if($("noteItems").children.length>1){tr.remove();updateNoteSummary()}};sync()}
 $("cancelRecordClose").onclick=()=>$("cancelModal").classList.remove("show");
 $("cancelRecordCancel").onclick=()=>$("cancelModal").classList.remove("show");
 $("cancelRecordSave").onclick=async()=>{try{await saveCancellation()}catch(e){alert(e.message||"No se pudo cancelar la nota.");$("cancelRecordSave").disabled=false;$("cancelRecordSave").textContent="Confirmar cancelación";}};
 $("cancelModal").onclick=e=>{if(e.target===$("cancelModal"))$("cancelModal").classList.remove("show")};
-$("profileClose").onclick=()=>$("profileModal").classList.remove("show");$("profileGateSave").onclick=finishProfileGate;$("profileGateLogout").onclick=async()=>{await sb.auth.signOut();$("profileGate").style.display="none";$("app").style.display="none";$("login").style.display="flex"};$("profileGateName").onkeydown=e=>{if(e.key==="Enter")finishProfileGate()};$("profileCancel").onclick=()=>$("profileModal").classList.remove("show");$("profileSave").onclick=saveProfileName;$("role").onclick=openProfileModal;$("profileModal").onclick=e=>{if(e.target===$("profileModal"))$("profileModal").classList.remove("show")};$("noteDiscount").oninput=updateNoteSummary;tr.querySelector(".note-remove").onclick=()=>{if($("noteItems").children.length>1){tr.remove();updateNoteSummary()}};sync()}
-$("returnClose").onclick=()=>$("returnModal").classList.remove("show");
+$("profileClose").onclick=()=>$("profileModal").classList.remove("show");
+$("profileGateSave").onclick=finishProfileGate;
+$("profileGateLogout").onclick=async()=>{await sb.auth.signOut();$("profileGate").style.display="none";$("app").style.display="none";$("login").style.display="flex"};
+$("profileGateName").onkeydown=e=>{if(e.key==="Enter")finishProfileGate()};
+$("profileCancel").onclick=()=>$("profileModal").classList.remove("show");
+$("profileSave").onclick=saveProfileName;
+$("role").onclick=openProfileModal;
+$("profileModal").onclick=e=>{if(e.target===$("profileModal"))$("profileModal").classList.remove("show")};$("returnClose").onclick=()=>$("returnModal").classList.remove("show");
 $("returnCancel").onclick=()=>$("returnModal").classList.remove("show");
 $("returnChange").onclick=async()=>{returnSelected=null;returnSelectedRows=[];$("returnSelected").style.display="none";$("returnSearch").value="";await loadReturnCandidates("");};
 $("returnSearch").oninput=e=>loadReturnCandidates(e.target.value);
