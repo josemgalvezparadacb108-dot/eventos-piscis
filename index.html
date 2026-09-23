@@ -445,14 +445,14 @@ async function loadReports(){
     sb.from("inventory_notes").select("id,note_number,note_type,client,event_name,event_date,pickup_date,delivery_time,return_status,dispatch_status,cancel_status,created_by,created_at,cancelled_by,cancelled_by_label,cancelled_at").gte("created_at",startISO).lt("created_at",endISO).limit(5000)
   ]);
   if(mvRes.error)return alert(mvRes.error.message);if(noteRes.error)return alert(noteRes.error.message);
-  const rows=mvRes.data||[],notes=noteRes.data||[];
+  const rows=mvRes.data||[],notes=noteRes.data||[],activeNotes=notes.filter(x=>x.cancel_status!=="cancelada"),cancelledNotes=notes.filter(x=>x.cancel_status==="cancelada");
   const inQty=rows.filter(x=>x.movement_type==="entrada").reduce((a,x)=>a+Number(x.quantity),0);
   const outQty=rows.filter(x=>x.movement_type==="salida").reduce((a,x)=>a+Number(x.quantity),0);
-  const rentals=notes.filter(x=>x.note_type==="salida"),returns=notes.filter(x=>x.note_type==="entrada");
-  const pendingAll=await sb.from("inventory_notes").select("id,note_number,client,event_name,event_date,pickup_date,return_status,dispatch_status,created_at").eq("note_type","salida").in("return_status",["pendiente","parcial"]).order("pickup_date",{ascending:true,nullsFirst:false}).limit(500);
+  const rentals=activeNotes.filter(x=>x.note_type==="salida"),returns=activeNotes.filter(x=>x.note_type==="entrada");
+  const pendingAll=await sb.from("inventory_notes").select("id,note_number,client,event_name,event_date,pickup_date,return_status,dispatch_status,created_at").eq("note_type","salida").eq("cancel_status","activa").in("return_status",["pendiente","parcial"]).order("pickup_date",{ascending:true,nullsFirst:false}).limit(500);
   if(pendingAll.error)return alert(pendingAll.error.message);
   const pending=pendingAll.data||[];
-  const upcomingNotes=await sb.from("inventory_notes").select("note_number,client,event_name,event_date,delivery_time,dispatch_status").eq("note_type","salida").gte("event_date",todayMX()).lte("event_date",range.end.toISOString().slice(0,10)).neq("dispatch_status","enviada").order("event_date",{ascending:true}).order("delivery_time",{ascending:true}).limit(500);
+  const upcomingNotes=await sb.from("inventory_notes").select("note_number,client,event_name,event_date,delivery_time,dispatch_status").eq("note_type","salida").eq("cancel_status","activa").gte("event_date",todayMX()).lte("event_date",range.end.toISOString().slice(0,10)).neq("dispatch_status","enviada").order("event_date",{ascending:true}).order("delivery_time",{ascending:true}).limit(500);
   if(upcomingNotes.error)return alert(upcomingNotes.error.message);
   const upcoming=upcomingNotes.data||[];
   $("repIn").textContent=inQty;$("repOut").textContent=outQty;$("repRentals").textContent=rentals.length;$("repReturns").textContent=returns.length;$("repPending").textContent=pending.length;$("repUpcoming").textContent=upcoming.length;
@@ -473,25 +473,31 @@ async function loadReports(){
   const auditUsers=userRes.data||[],auditMap={};
   auditUsers.forEach(u=>auditMap[u.id]={role:u.role==="admin"?"Administrador":"Empleado",email:u.email||"Sin correo"});
   const activity={};
-  auditUsers.forEach(u=>activity[u.id]={mov:0,out:0,ret:0,maint:0});
+  auditUsers.forEach(u=>activity[u.id]={mov:0,out:0,ret:0,maint:0,cancel:0});
   rows.forEach(x=>{
-    if(!activity[x.created_by])activity[x.created_by]={mov:0,out:0,ret:0,maint:0};
+    if(!activity[x.created_by])activity[x.created_by]={mov:0,out:0,ret:0,maint:0,cancel:0};
     activity[x.created_by].mov++;
   });
-  notes.forEach(x=>{
-    if(!activity[x.created_by])activity[x.created_by]={mov:0,out:0,ret:0,maint:0};
+  activeNotes.forEach(x=>{
+    if(!activity[x.created_by])activity[x.created_by]={mov:0,out:0,ret:0,maint:0,cancel:0};
     if(x.note_type==="salida")activity[x.created_by].out++;
     if(x.note_type==="entrada")activity[x.created_by].ret++;
   });
+  cancelledNotes.forEach(x=>{
+    if(x.cancelled_by){
+      if(!activity[x.cancelled_by])activity[x.cancelled_by]={mov:0,out:0,ret:0,maint:0,cancel:0};
+      activity[x.cancelled_by].cancel++;
+    }
+  });
   (maintRes.data||[]).forEach(x=>{
-    if(x.sent_by){if(!activity[x.sent_by])activity[x.sent_by]={mov:0,out:0,ret:0,maint:0};activity[x.sent_by].maint++}
-    if(x.returned_by&&x.returned_by!==x.sent_by){if(!activity[x.returned_by])activity[x.returned_by]={mov:0,out:0,ret:0,maint:0};activity[x.returned_by].maint++}
+    if(x.sent_by){if(!activity[x.sent_by])activity[x.sent_by]={mov:0,out:0,ret:0,maint:0,cancel:0};activity[x.sent_by].maint++}
+    if(x.returned_by&&x.returned_by!==x.sent_by){if(!activity[x.returned_by])activity[x.returned_by]={mov:0,out:0,ret:0,maint:0,cancel:0};activity[x.returned_by].maint++}
   });
   const userIds=[...new Set([...auditUsers.map(x=>x.id),...Object.keys(activity)])];
   $("reportUsers").innerHTML=userIds.map(id=>{
-    const a=activity[id]||{mov:0,out:0,ret:0,maint:0},u=auditMap[id]||{role:"Usuario",email:"ID "+id};
-    const total=a.mov+a.out+a.ret+a.maint;
-    return '<tr><td><span class="report-user-name">'+esc(u.role)+'</span><span class="report-user-email">'+esc(u.email)+'</span></td><td class="report-user-num">'+a.mov+'</td><td class="report-user-num">'+a.out+'</td><td class="report-user-num">'+a.ret+'</td><td class="report-user-num">'+a.maint+'</td><td class="report-user-num">'+total+'</td></tr>';
+    const a=activity[id]||{mov:0,out:0,ret:0,maint:0,cancel:0},u=auditMap[id]||{role:"Usuario",email:"ID "+id};
+    const total=a.mov+a.out+a.ret+a.cancel+a.maint;
+    return '<tr><td><span class="report-user-name">'+esc(u.role)+'</span><span class="report-user-email">'+esc(u.email)+'</span></td><td class="report-user-num">'+a.mov+'</td><td class="report-user-num">'+a.out+'</td><td class="report-user-num">'+a.ret+'</td><td class="report-user-num">'+a.cancel+'</td><td class="report-user-num">'+a.maint+'</td><td class="report-user-num">'+total+'</td></tr>';
   }).join("")||'<tr><td colspan="7" class="report-empty">Sin actividad registrada en el periodo.</td></tr>';
 
   $("reportPending").innerHTML=reportRowsHtml(pending.slice(0,8).map(x=>'<div class="report-item"><span><b>'+esc(x.client||"Sin cliente")+'</b><br><small>'+esc(x.note_number)+' · '+esc(x.event_name||"Sin evento")+(x.pickup_date?" · "+new Date(x.pickup_date+"T00:00:00").toLocaleDateString("es-MX"):"")+'</small></span><span class="report-number">'+(x.return_status==="parcial"?"Parcial":"Pendiente")+'</span></div>'),'No hay rentas pendientes de regreso.');
@@ -533,7 +539,7 @@ async function openReturnModal(){
   await loadReturnCandidates("");
 }
 async function loadReturnCandidates(q){
-  const{data,error}=await sb.from("inventory_notes").select("id,note_number,client,event_name,event_date,pickup_date,pickup_time,return_status").eq("note_type","salida").in("return_status",["pendiente","parcial"]).order("pickup_date",{ascending:true,nullsFirst:false}).limit(200);
+  const{data,error}=await sb.from("inventory_notes").select("id,note_number,client,event_name,event_date,pickup_date,pickup_time,return_status").eq("note_type","salida").eq("cancel_status","activa").in("return_status",["pendiente","parcial"]).order("pickup_date",{ascending:true,nullsFirst:false}).limit(200);
   if(error){$("returnCandidates").innerHTML='<div class="return-empty">'+esc(error.message)+'</div>';return}
   const term=(q||"").trim().toLowerCase();
   returnCandidates=(data||[]).filter(x=>(x.note_number+" "+(x.client||"")+" "+(x.event_name||"")).toLowerCase().includes(term));
@@ -663,7 +669,7 @@ async function viewSavedNote(number){
   ["noteClient","notePhone","noteSalon","noteEvent","noteDate","noteAddress","noteDeliveryTime","notePickupDate","notePickupTime","noteDiscount","noteDiscountNote","noteObs"].forEach(id=>$(id).disabled=!isAdmin||isCancelled);
   $("addNoteRow").style.display=canEditItems?"inline-block":"none";
   $("noteItems").querySelectorAll("select,.note-qty,.note-remove").forEach(x=>x.disabled=!canEditItems);
-  $("noteCancelRecord").style.display=(!isCancelled&&role!=="")?"inline-block":"none";
+  $("noteCancelRecord").style.display=(!isCancelled&&role!==""&&!(note.note_type==="salida"&&note.return_status==="devuelta"))?"inline-block":"none";
   $("noteSave").textContent=isAdmin&&!isCancelled?"Guardar cambios":"Imprimir nota";
   $("noteSave").dataset.folio=note.note_number;$("noteSave").dataset.mode=isAdmin&&!isCancelled?"edit":"print";
   $("noteCancelRecord").onclick=()=>openCancelModal(note.note_number);
