@@ -235,7 +235,42 @@ function startScheduledExitWatcher(){
   loadScheduledExits();
   scheduledExitTimer=setInterval(loadScheduledExits,30000);
 }
-async function loadPendingReturns(){const{data,error}=await sb.from("inventory_notes").select("id,note_number,client,event_name,event_date,delivery_address,pickup_date,pickup_time,created_at,return_status").eq("note_type","salida").eq("return_status","pendiente").order("pickup_date",{ascending:true,nullsFirst:false}).limit(200);if(error)return;const rows=data||[];const today=new Date();today.setHours(0,0,0,0);const box=$("pendingReturns"),list=$("pendingReturnsList");if(!rows.length){box.style.display="none";list.innerHTML="";return}box.style.display="block";if(role==="employee"){box.style.background="#fff7f7";box.style.borderColor="#fecaca";box.innerHTML='<h3 class="section-title">⚠️ Atención</h3><div id="pendingReturnsList" class="restock-list"></div>';const empList=$("pendingReturnsList");empList.innerHTML=rows.map(x=>{const overdue=x.pickup_date&&new Date(x.pickup_date+"T00:00:00")<today;const fecha=x.pickup_date?new Date(x.pickup_date+"T00:00:00").toLocaleDateString("es-MX"):"sin fecha";const hora=x.pickup_time?" "+esc(x.pickup_time):"";return '<button type="button" class="restock-item pending-note" data-pending-note="'+esc(x.note_number)+'" style="width:100%;text-align:left;background:#fff;border-color:#e5e7eb"><span><b>Hay una renta pendiente de regreso.</b><br><small>'+esc(x.note_number)+' · '+esc(x.client||"Sin cliente")+' · '+esc(x.event_name||"Sin evento")+'<br>Fecha para levantar: '+fecha+hora+'</small></span><b style="color:'+(overdue?"#be123c":"#92400e")+'">'+(overdue?"Atrasada":"Ver nota")+'</b></button>'}).join("");return}box.style.background="#fff7f7";box.style.borderColor="#fecaca";box.innerHTML='<h3 class="section-title">⚠️ Rentas pendientes de regreso</h3><div id="pendingReturnsList" class="restock-list"></div>';const adminList=$("pendingReturnsList");adminList.innerHTML=rows.map(x=>{const overdue=x.pickup_date&&new Date(x.pickup_date+"T00:00:00")<today;return '<button type="button" class="restock-item pending-note" data-pending-note="'+esc(x.note_number)+'" style="background:'+(overdue?"#fff1f2":"#fffbeb")+';border-color:'+(overdue?"#fecdd3":"#fde68a")+'"><span><b>'+esc(x.note_number)+' · '+esc(x.client||"Sin cliente")+'</b><br><small>'+esc(x.event_name||"Sin evento")+' · Levantar: '+(x.pickup_date?new Date(x.pickup_date+"T00:00:00").toLocaleDateString("es-MX"):"sin fecha")+(x.pickup_time?" "+esc(x.pickup_time):"")+'</small></span><b style="color:'+(overdue?"#be123c":"#92400e")+'">'+(overdue?"Atrasada":"Pendiente")+'</b></button>'}).join("")}
+async function loadPendingReturns(){
+  const{data,error}=await sb.from("inventory_notes").select("id,note_number,client,event_name,event_date,delivery_address,pickup_date,pickup_time,delivery_time,created_at,return_status").eq("note_type","salida").eq("return_status","pendiente").order("pickup_date",{ascending:true,nullsFirst:false}).limit(200);
+  if(error)return;
+  const today=todayMX();
+  const nowM=minutesFromTime(localTimeNow());
+  const rows=(data||[]).filter(x=>{
+    if(!x.event_date)return true;
+    if(x.event_date<today)return true;
+    if(x.event_date>today)return false;
+    if(!x.delivery_time)return true;
+    const tm=minutesFromTime(x.delivery_time);
+    return tm==null||nowM>=tm;
+  });
+  const box=$("pendingReturns"),list=$("pendingReturnsList");
+  if(!rows.length){box.style.display="none";list.innerHTML="";return}
+  box.style.display="block";
+  if(role==="employee"){
+    box.style.background="#fff7f7";box.style.borderColor="#fecaca";
+    box.innerHTML='<h3 class="section-title">⚠️ Atención</h3><div id="pendingReturnsList" class="restock-list"></div>';
+    const empList=$("pendingReturnsList");
+    empList.innerHTML=rows.map(x=>{
+      const overdue=x.pickup_date&&new Date(x.pickup_date+"T00:00:00")<new Date(today+"T00:00:00");
+      const fecha=x.pickup_date?new Date(x.pickup_date+"T00:00:00").toLocaleDateString("es-MX"):"sin fecha";
+      const hora=x.pickup_time?" "+esc(String(x.pickup_time).slice(0,5)):"";
+      return '<button type="button" class="restock-item pending-note" data-pending-note="'+esc(x.note_number)+'" style="width:100%;text-align:left;background:#fff;border-color:#e5e7eb"><span><b>Hay una renta pendiente de regreso.</b><br><small>'+esc(x.note_number)+' · '+esc(x.client||"Sin cliente")+' · '+esc(x.event_name||"Sin evento")+'<br>Fecha para levantar: '+fecha+hora+'</small></span><b style="color:'+(overdue?"#be123c":"#92400e")+'">'+(overdue?"Atrasada":"Ver nota")+'</b></button>'
+    }).join("");
+    return;
+  }
+  box.style.background="#fff7f7";box.style.borderColor="#fecaca";
+  box.innerHTML='<h3 class="section-title">⚠️ Rentas pendientes de regreso</h3><div id="pendingReturnsList" class="restock-list"></div>';
+  const adminList=$("pendingReturnsList");
+  adminList.innerHTML=rows.map(x=>{
+    const overdue=x.pickup_date&&new Date(x.pickup_date+"T00:00:00")<new Date(today+"T00:00:00");
+    return '<button type="button" class="restock-item pending-note" data-pending-note="'+esc(x.note_number)+'" style="background:'+(overdue?"#fff1f2":"#fffbeb")+';border-color:'+(overdue?"#fecdd3":"#fde68a")+'"><span><b>'+esc(x.note_number)+' · '+esc(x.client||"Sin cliente")+'</b><br><small>'+esc(x.event_name||"Sin evento")+' · Levantar: '+(x.pickup_date?new Date(x.pickup_date+"T00:00:00").toLocaleDateString("es-MX"):"sin fecha")+(x.pickup_time?" "+esc(String(x.pickup_time).slice(0,5)):"")+'</small></span><b style="color:'+(overdue?"#be123c":"#92400e")+'">'+(overdue?"Atrasada":"Pendiente")+'</b></button>'
+  }).join("")
+}
 async function loadTodaySummary(){const start=new Date();start.setHours(0,0,0,0);const{data,error}=await sb.from("inventory_movements").select("movement_type,quantity").gte("created_at",start.toISOString());if(error)return;const rows=data||[];$("todayIn").textContent=rows.filter(x=>x.movement_type==="entrada").reduce((a,x)=>a+Number(x.quantity),0);$("todayOut").textContent=rows.filter(x=>x.movement_type==="salida").reduce((a,x)=>a+Number(x.quantity),0);$("todayMoves").textContent=rows.length}
 
 async function loadMaintenance(){const{data,error}=await sb.from("maintenance_records").select("id,inventory_id,sent_quantity,remaining_quantity,reason,sent_by,sent_at,returned_at,returned_by,status").order("sent_at",{ascending:false}).limit(200);if(error)return alert(error.message);const ids=[...new Set((data||[]).flatMap(x=>[x.sent_by,x.returned_by]).filter(Boolean))];let names={};if(ids.length){const{data:p}=await sb.from("profiles").select("id,role").in("id",ids);(p||[]).forEach(x=>names[x.id]=x.role==="admin"?"Administrador":"Empleado")}const rows=(data||[]).map(x=>({...x,product:items.find(i=>i.id===x.inventory_id)?.product||x.inventory_id,sentUser:names[x.sent_by]||"Usuario",returnedUser:names[x.returned_by]||"Usuario"}));$("maintenanceBody").innerHTML=rows.map(x=>'<tr><td><b>'+esc(x.product)+'</b></td><td>'+x.remaining_quantity+(x.status==="devuelto"&&x.remaining_quantity===0?"":" de "+x.sent_quantity)+'</td><td>'+new Date(x.sent_at).toLocaleString("es-MX")+'</td><td>'+esc(x.reason||"—")+'</td><td>'+esc(x.sentUser)+'</td><td class="'+(x.status==="activo"?"maintenance-active":"entrada")+'">'+(x.status==="activo"?"En mantenimiento":"Devuelto")+'</td><td>'+ (x.returned_at?new Date(x.returned_at).toLocaleString("es-MX")+" · "+esc(x.returnedUser):"—")+'</td></tr>').join("")||'<tr><td colspan="7" style="text-align:center;padding:25px">No hay registros de mantenimiento.</td></tr>'}
