@@ -18,6 +18,62 @@
 .note-stock-pill{display:inline-block;padding:6px 9px;border-radius:999px;background:#eef2f7;color:#475569;font-size:12px;font-weight:800}.note-price-cell{font-weight:800;color:#172033;white-space:nowrap}.note-remove{padding:8px 10px!important}
 .note-add{background:#eef2ff!important;color:#3730a3!important}.note-bottom{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px}.note-bottom-info{color:#64748b;font-size:12px}.note-actions{display:flex;justify-content:flex-end;gap:8px}.note-save{padding:12px 18px}
 @media(max-width:750px){.note-modal-box{border-radius:18px}.note-head{padding:18px}.note-body{padding:16px}.note-grid{grid-template-columns:1fr}.note-intro{align-items:flex-start;flex-direction:column}.note-summary{width:100%}.note-head-right{align-self:flex-start}.note-bottom{align-items:stretch;flex-direction:column}.note-actions{width:100%}.note-actions button{flex:1}}
+
+/* Minimal redesign */
+:root{--ink:#172033;--muted:#6b7280;--line:#e7e9ed;--soft:#f7f8fa;--white:#fff}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#f6f7f9;color:var(--ink);letter-spacing:-.01em}
+button,input,select{font-family:inherit}
+button{border-radius:9px;padding:9px 12px;font-weight:700;transition:.15s ease}
+button:hover{filter:brightness(.98)}
+.top{background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);padding:12px 18px;backdrop-filter:blur(8px)}
+.topin{max-width:1320px;min-height:54px}
+.brand{gap:10px}.mini{width:44px;height:44px;border-radius:10px}.brand h1{font-size:18px;letter-spacing:-.02em}.brand .muted{font-size:12px;margin-top:2px}
+.actions{gap:6px}.actions button.primary,.actions button.secondary{background:#fff!important;color:var(--ink)!important;border:1px solid var(--line)!important;box-shadow:none}
+.actions button.primary:hover,.actions button.secondary:hover{background:#f8fafc!important}
+.actions button#noteOutBtn{background:var(--ink)!important;color:#fff!important;border-color:var(--ink)!important}
+.role{padding:6px 9px;border:1px solid var(--line);background:#f8fafc;color:#475569}
+main{max-width:1320px;padding:22px 20px 40px}
+.welcome,.card{border:1px solid var(--line);border-radius:12px;box-shadow:none;background:var(--white);padding:18px}
+.welcome{margin-bottom:14px}.welcome h2{font-size:18px;margin-bottom:4px}
+.kpis,.summary{gap:10px;margin-bottom:10px}
+.kpis .card,.summary .card{padding:15px}
+.kpi-title{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#8a93a2}
+.kpi{font-size:26px;margin-top:5px}.summary strong{font-size:20px}
+.notice{border-radius:10px;margin-bottom:12px;padding:11px 13px}
+.inventory-section{margin-top:10px}.inventory-head{margin-bottom:11px}.inventory-title{font-size:20px}.inventory-sub{font-size:12px}.inventory-count{border:1px solid var(--line);background:#fff;color:#475569;padding:6px 9px}
+.inventory-filters{grid-template-columns:minmax(0,1fr) 180px 210px;gap:8px;margin-bottom:12px}
+.inventory-search input,.inventory-filters select{border:1px solid #dfe3e8;border-radius:9px;padding:11px;background:#fff}
+.inventory-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.inventory-card{border:1px solid var(--line);border-radius:13px;box-shadow:none}
+.inventory-card:hover{transform:none;box-shadow:0 5px 16px #1720330a}
+.inventory-card-top{padding:13px 14px 10px}.inventory-photo{width:50px;height:50px;border-radius:10px}
+.inventory-name strong{font-size:14px}.inventory-id{font-size:10px}
+.inventory-status{padding:5px 8px;font-size:10px}
+.inventory-main{padding:3px 14px 13px}.inventory-stock-row{gap:7px;margin-bottom:10px}
+.inventory-stock-box{padding:10px;border:1px solid #eceff2;border-radius:10px;background:#fafbfc}
+.inventory-stock-box .value{font-size:22px}.inventory-metrics{gap:6px}
+.inventory-metric{padding:8px 6px;border:1px solid #eef0f3;border-radius:9px}.inventory-metric b{font-size:14px}.inventory-meta{gap:7px;margin-top:8px}
+.inventory-meta-box{padding:8px 9px;border-radius:9px}.inventory-meta-box .text{font-size:11px}
+.inventory-footer{padding:9px 14px;background:#fff;border-top:1px solid var(--line)}
+.inventory-condition{padding:5px 9px}.inventory-actions{gap:5px}
+.inventory-actions button{padding:7px 9px;font-size:11px}
+.schedule-card,.attention-card{border:1px solid var(--line)!important;border-radius:12px;box-shadow:none;padding:16px;background:#fff!important}
+.schedule-head,.attention-head{margin-bottom:11px}.schedule-title,.attention-title{font-size:17px}.schedule-sub,.attention-sub{font-size:12px}
+.schedule-count{background:#f5f6f8;border:1px solid #e8eaee;padding:5px 8px}
+.scheduled-item,.attention-item{border:1px solid var(--line);border-radius:11px;box-shadow:none;padding:12px 13px;background:#fff;margin-top:7px}
+.scheduled-time{font-size:18px}.scheduled-status{font-size:11px}.attention-note{font-size:14px}.attention-detail{font-size:12px}.attention-status{font-size:11px;padding:6px 9px}
+.restock-item{border:1px solid #eadfbe;background:#fffaf0;border-radius:10px;padding:10px 12px}
+.modalbox{border:1px solid var(--line);border-radius:13px;box-shadow:0 18px 50px #17203324}
+.note-modal-box{border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 50px #17203324}
+.note-head{background:#fff;color:var(--ink);border-bottom:1px solid var(--line);padding:17px 20px}
+.note-brand p{color:var(--muted)}.note-brand h2{font-size:19px}.note-badge{background:#f5f6f8;border:1px solid var(--line);color:var(--ink)}.note-close{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.note-body{padding:18px}.note-section{border:1px solid var(--line);border-radius:11px;padding:14px}.note-field input,.note-product,.note-qty{border:1px solid #dfe3e8;border-radius:9px}.note-chip{border:1px solid var(--line);background:#f8fafc;border-radius:9px}
+.login{background:#f6f7f9}.box{border:1px solid var(--line);border-radius:14px;box-shadow:none;padding:26px}.logo{width:120px;height:120px;border-radius:16px}.field input{border:1px solid #dfe3e8;border-radius:9px;padding:11px}.full{border-radius:9px}
+.danger{background:#fff!important;border:1px solid #e8caca;color:#a33!important}.edit{background:#fff!important;border:1px solid #dce2ea;color:#3b4a60!important}
+.status{background:#f0fdf4;color:#166534;border:1px solid #ccefd6}.low{background:#fff6f6;color:#a33;border:1px solid #f0d0d0}
+@media(max-width:1100px){.inventory-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:850px){.inventory-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.kpis,.summary{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){.inventory-grid{grid-template-columns:1fr}.kpis,.summary{grid-template-columns:1fr}.topin{align-items:flex-start}.actions{justify-content:flex-start}.inventory-filters{grid-template-columns:1fr}.scheduled-item,.attention-item{align-items:flex-start}.scheduled-side{flex-direction:column;align-items:flex-end}.attention-item{flex-direction:column}.attention-status{align-self:flex-end}}
 </style></head><body>
 <section id="login" class="login"><div class="box"><img class="logo" src="./logo.webp" alt="Eventos Piscis"><h1>Bienvenido a Eventos Piscis</h1><p class="muted">Eventos que enamoran</p><div id="err" class="error">Correo o contraseña incorrectos.</div><div class="field"><label>Correo</label><input id="email" type="email"></div><div class="field"><label>Contraseña</label><input id="pass" type="password"></div><button id="loginBtn" class="primary full">Entrar</button><button id="resetBtn" type="button" class="secondary full" style="margin-top:10px">Restablecer contraseña</button></div></section>
 <section id="app" class="app"><header class="top"><div class="topin"><div class="brand"><img class="mini" src="./logo.webp" alt="Eventos Piscis"><div><h1>Bienvenido a Eventos Piscis</h1><div class="muted">Eventos que enamoran</div></div></div><div class="actions"><span id="role" class="role"></span><button id="noteOutBtn" class="primary">Notas nuevas</button><button id="noteInBtn" class="secondary">Notas de entrada</button><button id="historyBtn" class="secondary">Historial</button><button id="maintenanceBtn" class="secondary">Mantenimiento</button><button id="reportsBtn" class="secondary">Reportes</button><button id="periodsBtn" class="secondary" style="display:none">Periodos cerrados</button><button id="adjustBtn" class="secondary">Conteo físico</button><button id="refreshBtn" class="secondary">Actualizar</button><button id="exportBtn" class="secondary">Exportar y cerrar periodo</button><button id="logout" class="secondary">Cerrar sesión</button><button id="add" class="primary">＋ Agregar producto</button></div></div></header>
