@@ -191,7 +191,7 @@ main{max-width:1320px;padding:22px 20px 40px}
   </div>
   <div class="report-cols">
     <div class="card"><div class="report-section-head"><h3 class="section-title">Productos más rentados</h3><span class="muted">Periodo seleccionado</span></div><div id="reportTop"></div></div>
-    <div class="card"><div class="report-section-head"><h3 class="section-title">Quién hizo qué</h3><span class="muted">Actividad registrada</span></div><div class="report-user-table-wrap"><table class="report-user-table"><thead><tr><th>Usuario</th><th>Movimientos</th><th>Notas de salida</th><th>Devoluciones</th><th>Cancelaciones</th><th>Mantenimiento</th><th>Total</th></tr></thead><tbody id="reportUsers"></tbody></table></div></div>
+    <div id="reportAuditCard" class="card"><div class="report-section-head"><h3 class="section-title">Quién hizo qué</h3><span class="muted">Actividad registrada</span></div><div class="report-user-table-wrap"><table class="report-user-table"><thead><tr><th>Usuario</th><th>Movimientos</th><th>Notas de salida</th><th>Devoluciones</th><th>Cancelaciones</th><th>Mantenimiento</th><th>Total</th></tr></thead><tbody id="reportUsers"></tbody></table></div></div>
   </div>
   <div class="report-cols">
     <div class="card"><div class="report-section-head"><h3 class="section-title">Rentas pendientes</h3><span class="muted">Regreso</span></div><div id="reportPending"></div></div>
@@ -460,7 +460,7 @@ function getReportRange(kind){
   const m=new Date(todayStart);m.setDate(1);const end=new Date(m);end.setMonth(end.getMonth()+1);return{start:m,end,label:"Este mes · "+m.toLocaleDateString("es-MX")+" al "+new Date(end.getTime()-1).toLocaleDateString("es-MX")};
 }
 function reportRowsHtml(arr,empty){return arr.length?arr.join(""):'<div class="report-empty">'+empty+'</div>'}
-async function loadReports(){
+async function loadReports(){$("reportAuditCard").style.display=role==="admin"?"block":"none";
   const range=getReportRange($("reportRange").value);$("reportRangeLabel").textContent=range.label;
   const startISO=range.start.toISOString(),endISO=range.end.toISOString();
   const[mvRes,noteRes]=await Promise.all([
