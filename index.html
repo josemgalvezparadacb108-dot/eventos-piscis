@@ -78,8 +78,8 @@ main{max-width:1320px;padding:22px 20px 40px}
 <section id="login" class="login"><div class="box"><img class="logo" src="./logo.webp" alt="Eventos Piscis"><h1>Bienvenido a Eventos Piscis</h1><p class="muted">Eventos que enamoran</p><div id="err" class="error">Correo o contraseña incorrectos.</div><div class="field"><label>Correo</label><input id="email" type="email"></div><div class="field"><label>Contraseña</label><input id="pass" type="password"></div><button id="loginBtn" class="primary full">Entrar</button><button id="resetBtn" type="button" class="secondary full" style="margin-top:10px">Restablecer contraseña</button></div></section>
 <section id="profileGate" class="profile-gate" style="display:none"><div class="profile-gate-card">
   <img src="./logo.webp" class="profile-gate-logo" alt="Eventos Piscis">
-  <h1>Mi nombre</h1>
-  <p class="profile-gate-sub">¿Cómo te identificamos?</p>
+  <h1>Bienvenido</h1>
+  <p class="profile-gate-sub">¿Cómo te llamas?</p>
   <div class="field"><label>Nombre</label><input id="profileGateName" placeholder="Escribe tu nombre" autocomplete="name"></div>
   <button id="profileGateSave" type="button" class="primary full">Continuar</button>
   <button id="profileGateLogout" type="button" class="secondary full" style="margin-top:8px">Cerrar sesión</button>
@@ -250,6 +250,30 @@ async function start(u){
   await load();
   if(channel)sb.removeChannel(channel);
   channel=sb.channel("inventory-live").on("postgres_changes",{event:"*",schema:"public",table:"inventory"},load).subscribe();
+}
+async function finishProfileGate(){
+  const name=$("profileGateName").value.trim();
+  if(!name){$("profileGateName").focus();return alert("Escribe tu nombre.");}
+  const btn=$("profileGateSave");btn.disabled=true;btn.textContent="Guardando...";
+  try{
+    const{error}=await sb.rpc("update_my_display_name",{p_display_name:name});
+    if(error)throw new Error(error.message);
+    currentUserLabel=name;
+    $("role").textContent=name;
+    $("role").title="Cambiar nombre";
+    $("profileGate").style.display="none";
+    $("app").style.display="block";
+    $("add").style.display=role==="admin"?"inline-block":"none";
+    $("periodsBtn").style.display=role==="admin"?"inline-block":"none";
+    $("adjustBtn").style.display=role==="admin"?"inline-block":"none";
+    $("exportBtn").style.display=role==="admin"?"inline-block":"none";
+    $("historyClear").style.display=role==="admin"?"inline-block":"none";
+    $("welcomeTitle").textContent="Bienvenido, "+name;
+    await load();
+    if(channel)sb.removeChannel(channel);
+    channel=sb.channel("inventory-live").on("postgres_changes",{event:"*",schema:"public",table:"inventory"},load).subscribe();
+  }catch(e){alert(e.message||"No se pudo guardar el nombre.");}
+  finally{btn.disabled=false;btn.textContent="Continuar";}
 }
 function renderPeriodSummary(){
   const now=new Date();
@@ -665,8 +689,7 @@ $("cancelRecordClose").onclick=()=>$("cancelModal").classList.remove("show");
 $("cancelRecordCancel").onclick=()=>$("cancelModal").classList.remove("show");
 $("cancelRecordSave").onclick=async()=>{try{await saveCancellation()}catch(e){alert(e.message||"No se pudo cancelar la nota.");$("cancelRecordSave").disabled=false;$("cancelRecordSave").textContent="Confirmar cancelación";}};
 $("cancelModal").onclick=e=>{if(e.target===$("cancelModal"))$("cancelModal").classList.remove("show")};
-$("profileClose").onclick=()=>$("profileModal").classList.remove("show");
-$("profileGateSave").onclick=finishProfileGate;
+$("profileClose").onclick=()=>$("profileModal").classList.remove("show");$("profileGateSave").onclick=finishProfileGate;$("profileGateName").onkeydown=e=>{if(e.key==="Enter")finishProfileGate()};
 $("profileGateLogout").onclick=async()=>{await sb.auth.signOut();$("profileGate").style.display="none";$("app").style.display="none";$("login").style.display="flex"};
 $("profileGateName").onkeydown=e=>{if(e.key==="Enter")finishProfileGate()};
 $("profileCancel").onclick=()=>$("profileModal").classList.remove("show");
