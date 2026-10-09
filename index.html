@@ -94,6 +94,33 @@ button.secondary:hover{background:var(--ep-blue-soft);border-color:#b8cde4}
 .inventory-empty{border-color:#cbdced;background:#f9fbfe}
 .modal{backdrop-filter:blur(2px)}
 
+
+/* Barra fija y marca limpia: Eventos Piscis */
+#role{display:none!important}
+#app>.top{position:fixed!important;top:0;left:0;right:0;width:100%;z-index:1000;padding:10px 18px;background:#fff;border-bottom:1px solid #dce3eb;box-shadow:0 3px 14px rgba(20,40,65,.07)}
+#app>.top .topin{max-width:1400px;margin:0 auto;display:flex;flex-direction:column;align-items:stretch;gap:9px}
+#app>.top .brand{min-height:36px}
+#app>.top .mini{width:38px;height:38px;border-radius:9px}
+#app>.top .brand h1{font-size:18px;line-height:1.2;margin:0}
+#app>.top .brand .muted{display:none}
+#app>.top .actions{display:flex;flex-wrap:nowrap;align-items:center;gap:7px;overflow-x:auto;overflow-y:hidden;padding:1px 0 5px;scrollbar-width:thin;white-space:nowrap}
+#app>.top .actions button{flex:0 0 auto;white-space:nowrap;font-size:12px;padding:9px 12px;min-height:36px}
+#app>main{padding-top:155px}
+#app>.top .actions::-webkit-scrollbar{height:4px}
+#app>.top .actions::-webkit-scrollbar-thumb{background:#c6d2df;border-radius:8px}
+@media(min-width:1000px){
+ #app>.top .topin{flex-direction:row;align-items:center;gap:22px}
+ #app>.top .brand{flex:0 0 auto}
+ #app>.top .actions{flex:1;min-width:0}
+ #app>main{padding-top:105px}
+}
+@media(max-width:600px){
+ #app>.top{padding:9px 12px}
+ #app>.top .actions{gap:6px}
+ #app>.top .actions button{font-size:11px;padding:8px 10px}
+ #app>main{padding:130px 12px 28px}
+}
+
 </style></head><body>
 <section id="login" class="login"><div class="box"><img class="logo" src="./logo.webp" alt="Eventos Piscis"><h1>Bienvenido a Eventos Piscis</h1><p class="muted">Eventos que enamoran</p><div id="err" class="error">Correo o contraseña incorrectos.</div><div class="field"><label>Correo</label><input id="email" type="email"></div><div class="field"><label>Contraseña</label><input id="pass" type="password"></div><button id="loginBtn" class="primary full">Entrar</button><button id="resetBtn" type="button" class="secondary full" style="margin-top:10px">Restablecer contraseña</button>
 </div></section>
@@ -260,7 +287,7 @@ async function start(u){
   $("login").style.display="none";
   $("profileGate").style.display="none";
   $("app").style.display="block";
-  $("welcomeTitle").textContent="Bienvenido, "+currentUserLabel;
+  $("welcomeTitle").textContent="Eventos Piscis";
   $("role").textContent=currentUserLabel;
   $("role").title="Cambiar nombre";
   $("add").style.display=role==="admin"?"inline-block":"none";
@@ -289,7 +316,7 @@ async function finishProfileGate(){
     $("adjustBtn").style.display=role==="admin"?"inline-block":"none";
     $("exportBtn").style.display=role==="admin"?"inline-block":"none";
     $("historyClear").style.display=role==="admin"?"inline-block":"none";
-    $("welcomeTitle").textContent="Bienvenido, "+name;
+    $("welcomeTitle").textContent="Eventos Piscis";
     await load();
     if(channel)sb.removeChannel(channel);
     channel=sb.channel("inventory-live").on("postgres_changes",{event:"*",schema:"public",table:"inventory"},load).subscribe();
