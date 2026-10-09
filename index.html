@@ -984,4 +984,21 @@ document.getElementById("banquetForm").addEventListener("submit",async e=>{
  }catch(err){alert("No se pudo guardar la nota: "+(err.message||"Error desconocido"))}
  finally{btn.disabled=false;btn.textContent="Guardar nota de banquete"}
 });
+
+/* Menú lateral principal */
+(function(){
+ const toggle=document.getElementById("menuToggle");
+ const backdrop=document.getElementById("menuBackdrop");
+ if(!toggle||!backdrop)return;
+ function closeMenu(){document.body.classList.remove("menu-open");toggle.setAttribute("aria-expanded","false");toggle.setAttribute("aria-label","Abrir menú")}
+ toggle.addEventListener("click",function(){
+   const open=!document.body.classList.contains("menu-open");
+   document.body.classList.toggle("menu-open",open);
+   toggle.setAttribute("aria-expanded",String(open));
+   toggle.setAttribute("aria-label",open?"Cerrar menú":"Abrir menú");
+ });
+ backdrop.addEventListener("click",closeMenu);
+ document.querySelectorAll(".actions button").forEach(function(btn){btn.addEventListener("click",closeMenu)});
+ document.addEventListener("keydown",function(e){if(e.key==="Escape")closeMenu()});
+})();
 </script></body></html>
