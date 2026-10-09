@@ -132,7 +132,7 @@ button.secondary:hover{background:var(--ep-blue-soft);border-color:#b8cde4}
   <button id="profileGateSave" type="button" class="primary full">Continuar</button>
   <button id="profileGateLogout" type="button" class="secondary full" style="margin-top:8px">Cerrar sesión</button>
 </div></section>
-<section id="app" class="app"><header class="top"><div class="topin"><div class="brand"><img class="mini" src="./logo.webp" alt="Eventos Piscis"><div><h1 id="welcomeTitle">Eventos Piscis</h1><div class="muted">Eventos que enamoran</div></div></div><div class="actions"><button id="role" class="role" type="button" title="Configurar nombre"></button><button id="noteOutBtn" class="primary">Notas nuevas</button><button id="noteInBtn" class="secondary">Devoluciones</button><button id="historyBtn" class="secondary">Historial</button><button id="maintenanceBtn" class="secondary">Mantenimiento</button><button id="reportsBtn" class="secondary">Reportes</button><button id="periodsBtn" class="secondary" style="display:none">Periodos cerrados</button><button id="adjustBtn" class="secondary">Conteo físico</button><button id="refreshBtn" class="secondary">Actualizar</button><button id="exportBtn" class="secondary">Exportar y cerrar periodo</button><button id="logout" class="secondary">Cerrar sesión</button><button id="add" class="primary">＋ Agregar producto</button></div></div></header>
+<section id="app" class="app"><header class="top"><div class="topin"><div class="brand"><img class="mini" src="./logo.webp" alt="Eventos Piscis"><div><h1 id="welcomeTitle">Eventos Piscis</h1><div class="muted">Eventos que enamoran</div></div></div><div class="actions"><button id="role" class="role" type="button" title="Configurar nombre"></button><button id="noteOutBtn" class="primary">Notas nuevas</button><button id="banquetBtn" class="secondary">Banquetes</button><button id="noteInBtn" class="secondary">Devoluciones</button><button id="historyBtn" class="secondary">Historial</button><button id="maintenanceBtn" class="secondary">Mantenimiento</button><button id="reportsBtn" class="secondary">Reportes</button><button id="periodsBtn" class="secondary" style="display:none">Periodos cerrados</button><button id="adjustBtn" class="secondary">Conteo físico</button><button id="refreshBtn" class="secondary">Actualizar</button><button id="exportBtn" class="secondary">Exportar y cerrar periodo</button><button id="logout" class="secondary">Cerrar sesión</button><button id="add" class="primary">＋ Agregar producto</button></div></div></header>
 <main><div class="welcome"><h2>Inventario de Eventos Piscis</h2><div class="muted">Control de existencias sincronizado en línea.</div></div>
 <section class="kpis"><div class="card"><div class="kpi-title">Unidades en inventario</div><div id="units" class="kpi">0</div></div><div class="card"><div class="kpi-title">Disponible para renta</div><div id="rentable" class="kpi">0</div></div><div class="card"><div class="kpi-title">Stock bajo</div><div id="low" class="kpi">0</div></div><div class="card"><div class="kpi-title">Productos registrados</div><div id="count" class="kpi">0</div></div></section>
 <section class="summary"><div class="card"><div class="kpi-title">Entradas de hoy</div><strong id="todayIn">0</strong></div><div class="card"><div class="kpi-title">Salidas de hoy</div><strong id="todayOut">0</strong></div><div class="card"><div class="kpi-title">Movimientos de hoy</div><strong id="todayMoves">0</strong></div><div class="card"><div class="kpi-title">En mantenimiento</div><strong id="maintenanceTotal">0</strong></div></section>
@@ -201,7 +201,26 @@ button.secondary:hover{background:var(--ep-blue-soft);border-color:#b8cde4}
   </div>
 
   <div class="note-bottom"><div class="note-bottom-info">El sistema guarda automáticamente quién hizo la nota y la fecha/hora de creación.</div><div class="note-actions"><button id="noteCancelRecord" type="button" class="danger" style="display:none">Cancelar nota</button><button id="noteCancel" type="button" class="secondary">Cerrar</button><button id="noteSave" type="button" class="primary note-save">Guardar y generar nota</button></div></div><div class="note-summary note-summary-bottom"><span class="note-chip">Productos <strong id="noteCount">0</strong></span><span class="note-chip">Unidades <strong id="noteUnits">0</strong></span><span class="note-chip">Importe <strong id="noteTotal">$0</strong></span></div>
-</div></div></div><div id="returnModal" class="modal"><div class="return-box">
+</div></div></div><div id="banquetModal" class="modal"><div class="modalbox" style="max-width:900px"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><div><h2 style="margin:0">Nota de banquete</h2><div class="muted">Datos del cliente, evento y menú contratado.</div></div><button id="banquetClose" type="button" class="secondary">Cerrar</button></div>
+<form id="banquetForm" style="margin-top:16px"><div class="form">
+<div class="field"><label>Nombre del cliente *</label><input id="bnClient" required placeholder="Nombre completo"></div>
+<div class="field"><label>Teléfono</label><input id="bnPhone" type="tel" placeholder="Número de contacto"></div>
+<div class="field"><label>Tipo de evento</label><select id="bnType"><option value="">Selecciona</option><option>Boda</option><option>XV años</option><option>Cumpleaños</option><option>Bautizo</option><option>Graduación</option><option>Evento empresarial</option><option>Otro</option></select></div>
+<div class="field"><label>Fecha del evento *</label><input id="bnDate" type="date" required></div>
+<div class="field"><label>Hora del evento</label><input id="bnTime" type="time"></div>
+<div class="field"><label>Salón / lugar</label><input id="bnVenue" placeholder="Nombre del salón"></div>
+<div class="field"><label>Domicilio del evento</label><input id="bnAddress" placeholder="Dirección"></div>
+<div class="field"><label>Número de invitados</label><input id="bnGuests" type="number" min="0" placeholder="Ej. 150"></div>
+<div class="field" style="grid-column:1/-1"><label>¿Qué van a comer? Menú y cantidades *</label><textarea id="bnMenu" rows="3" required placeholder="Ej. entrada, plato fuerte, guarniciones, postre; cantidades por persona"></textarea></div>
+<div class="field" style="grid-column:1/-1"><label>Bebidas</label><textarea id="bnDrinks" rows="2" placeholder="Agua, refrescos, café, etc."></textarea></div>
+<div class="field" style="grid-column:1/-1"><label>Alergias o restricciones alimentarias</label><textarea id="bnDiet" rows="2" placeholder="Alergias, vegetarianos, menú infantil..."></textarea></div>
+<div class="field"><label>Quién atendió al cliente *</label><input id="bnAttendant" required placeholder="Nombre del colaborador"></div>
+<div class="field"><label>Precio cotizado ($)</label><input id="bnQuote" type="number" min="0" step="0.01" value="0"></div>
+<div class="field"><label>Anticipo ($)</label><input id="bnDeposit" type="number" min="0" step="0.01" value="0"></div>
+<div class="field"><label>Estado</label><select id="bnStatus"><option value="pendiente">Pendiente</option><option value="confirmado">Confirmado</option><option value="realizado">Realizado</option><option value="cancelado">Cancelado</option></select></div>
+<div class="field" style="grid-column:1/-1"><label>Observaciones adicionales</label><textarea id="bnNotes" rows="2" placeholder="Montaje, horarios de servicio, acuerdos especiales..."></textarea></div>
+</div><div class="modal-actions"><button id="bnReset" type="reset" class="secondary">Limpiar</button><button id="bnSave" type="submit" class="primary">Guardar nota de banquete</button></div></form>
+<div style="margin-top:24px;border-top:1px solid #e5e7eb;padding-top:16px"><h3 style="margin:0 0 10px">Notas de banquetes recientes</h3><div id="banquetList" class="report-list"><div class="schedule-empty">Abre Banquetes para consultar las notas.</div></div></div></div></div><div id="returnModal" class="modal"><div class="return-box">
   <div class="return-head"><div><h2>Devolución</h2><p>Registra el regreso de una renta de forma rápida.</p></div><button id="returnClose" type="button" class="secondary">Cerrar</button></div>
   <div class="return-body">
     <div class="return-search-row"><div class="return-search"><label>Buscar cliente o folio</label><input id="returnSearch" placeholder="Escribe el nombre del cliente o PISCIS-000005"></div><div id="returnSearchInfo" class="muted return-search-info"></div></div>
@@ -818,4 +837,34 @@ $("inventoryGrid").onclick=async e=>{
   if(de&&confirm("¿Eliminar este producto?")){const{error}=await sb.from("inventory").delete().eq("id",de.dataset.del);if(error)alert(error.message);else await load()}
 };
 $("form").onsubmit=async e=>{e.preventDefault();if(role!=="admin")return;const old=$("oldId").value,existing=old?items.find(x=>x.id===old):null,id=$("f_id").value.trim(),file=$("f_photo").files[0];if(!id){alert("Escribe un ID.");return}if(file&&(!file.type.startsWith("image/")||file.size>5*1024*1024)){alert("La foto debe ser una imagen de máximo 5 MB.");return}let photoUrl=existing?.photo_url||null;if(file){const ext=(file.name.split(".").pop()||"jpg").toLowerCase();const path=id+"-"+Date.now()+"."+ext;const{error:uploadError}=await sb.storage.from("product-photos").upload(path,file,{upsert:false,contentType:file.type});if(uploadError){alert(uploadError.message);return}photoUrl=sb.storage.from("product-photos").getPublicUrl(path).data.publicUrl}const p={id,product:$("f_product").value.trim(),category:$("f_category").value.trim(),supplier:$("f_supplier").value.trim(),stock:+$("f_stock").value,min_stock:+$("f_min").value,price:existing?Number(existing.price||0):0,condition:$("f_condition").value,photo_url:photoUrl};const r=old?await sb.from("inventory").update(p).eq("id",old):await sb.from("inventory").insert(p);if(r.error){alert(r.error.message);return}$("modal").classList.remove("show");await load()};
+
+// Banquetes: registro independiente de las notas de inventario.
+function banquetValue(id){return document.getElementById(id).value.trim()}
+async function loadBanquetNotes(){
+ const box=document.getElementById("banquetList");
+ box.innerHTML='<div class="schedule-empty">Cargando notas…</div>';
+ const {data,error}=await sb.from("banquet_notes").select("folio,client_name,event_type,event_date,event_time,venue,guest_count,menu_details,attendant_name,status,created_at").order("event_date",{ascending:true}).limit(100);
+ if(error){box.innerHTML='<div class="notice">'+esc(error.message)+'</div>';return}
+ if(!data?.length){box.innerHTML='<div class="schedule-empty">Todavía no hay notas de banquetes.</div>';return}
+ box.innerHTML=data.map(n=>'<div class="report-item" style="display:block"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><b>'+esc(n.folio)+' · '+esc(n.client_name)+'</b><span class="note-chip">'+esc(n.status)+'</span></div><div class="muted">'+esc(n.event_type||"Evento")+' · '+esc(n.event_date||"Sin fecha")+(n.event_time?' · '+esc(String(n.event_time).slice(0,5)):'')+' · '+esc(n.venue||"Lugar por confirmar")+'</div><div style="margin-top:8px"><b>Invitados:</b> '+esc(n.guest_count??"—")+' · <b>Atendió:</b> '+esc(n.attendant_name)+'</div><div style="margin-top:6px;white-space:pre-wrap"><b>Menú:</b> '+esc(n.menu_details)+'</div></div>').join("");
+}
+document.getElementById("banquetBtn").onclick=async()=>{document.getElementById("banquetModal").classList.add("show");const user=await sb.auth.getUser();document.getElementById("bnAttendant").value=user.data?.user?.user_metadata?.display_name||document.getElementById("role").textContent.replace(/\s*[·|].*$/,"").trim()||"";await loadBanquetNotes()};
+document.getElementById("banquetClose").onclick=()=>document.getElementById("banquetModal").classList.remove("show");
+document.getElementById("banquetModal").addEventListener("click",e=>{if(e.target.id==="banquetModal")e.currentTarget.classList.remove("show")});
+document.getElementById("banquetForm").addEventListener("submit",async e=>{
+ e.preventDefault();const btn=document.getElementById("bnSave");if(btn.disabled)return;
+ const client=banquetValue("bnClient"),date=banquetValue("bnDate"),menu=banquetValue("bnMenu"),attendant=banquetValue("bnAttendant");
+ if(!client||!date||!menu||!attendant){alert("Completa cliente, fecha, menú y quién atendió.");return}
+ const phone=banquetValue("bnPhone").replace(/\D/g,"");if(phone&&(phone.length<10||phone.length>15)){alert("Revisa el teléfono: debe tener de 10 a 15 dígitos.");return}
+ const quote=Number(banquetValue("bnQuote")||0),deposit=Number(banquetValue("bnDeposit")||0);if(quote<0||deposit<0){alert("Los importes no pueden ser negativos.");return}
+ btn.disabled=true;btn.textContent="Guardando…";
+ try{
+  const {data:userData,error:userError}=await sb.auth.getUser();if(userError||!userData.user)throw new Error("Tu sesión expiró. Inicia sesión nuevamente.");
+  const folio="BANQ-"+new Date().toISOString().slice(0,10).replaceAll("-","")+"-"+String(Date.now()).slice(-6);
+  const payload={folio,client_name:client,client_phone:banquetValue("bnPhone")||null,event_type:banquetValue("bnType")||null,event_date:date,event_time:banquetValue("bnTime")||null,venue:banquetValue("bnVenue")||null,address:banquetValue("bnAddress")||null,guest_count:banquetValue("bnGuests")?Number(banquetValue("bnGuests")):null,menu_details:menu,beverages:banquetValue("bnDrinks")||null,dietary_notes:banquetValue("bnDiet")||null,attendant_name:attendant,quoted_amount:quote,deposit_amount:deposit,status:banquetValue("bnStatus"),notes:banquetValue("bnNotes")||null,created_by:userData.user.id};
+  const {error}=await sb.from("banquet_notes").insert(payload);if(error)throw error;
+  alert("Nota de banquete guardada: "+folio);document.getElementById("banquetForm").reset();document.getElementById("bnQuote").value="0";document.getElementById("bnDeposit").value="0";await loadBanquetNotes();
+ }catch(err){alert("No se pudo guardar la nota: "+(err.message||"Error desconocido"))}
+ finally{btn.disabled=false;btn.textContent="Guardar nota de banquete"}
+});
 </script></body></html>
