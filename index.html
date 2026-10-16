@@ -244,6 +244,15 @@ body.menu-open .menu-backdrop{display:block}
 body.menu-open{overflow:hidden}
 @media(max-width:760px){.top{padding:10px 12px;position:sticky}.topin{flex-direction:row;align-items:center;flex-wrap:nowrap;position:relative}.actions{position:absolute;left:0;top:calc(100% + 8px);width:min(300px,86vw);max-height:70vh;overflow:auto;padding:12px;background:#102744;border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,.25);display:none!important;transform:none!important;z-index:80;flex-basis:auto}.topin #menuCheck:checked ~ .actions{display:flex!important;transform:none!important}body.menu-open .actions{display:flex!important;transform:none!important}.menu-toggle{display:flex;cursor:pointer;position:relative;z-index:90}.menu-backdrop{display:none!important}.nav-group{display:flex}.nav-group button{width:100%;font-size:14px}.brand h1{font-size:19px}}
 @media(prefers-reduced-motion:reduce){.actions{transition:none}}
+
+/* Forzar panel compacto del menú en pantallas táctiles */
+@media(max-width:900px){
+ header.top .topin{position:relative!important;overflow:visible!important}
+ header.top .topin .actions{position:absolute!important;left:0!important;right:auto!important;top:calc(100% + 8px)!important;width:min(290px,82vw)!important;max-width:82vw!important;max-height:68vh!important;display:none!important;transform:none!important;z-index:999!important;flex-basis:auto!important}
+ header.top .topin #menuCheck:checked ~ .actions,body.menu-open header.top .topin .actions{display:flex!important}
+ header.top .topin .menu-toggle{display:flex!important;position:relative!important;z-index:1000!important}
+}
+
 </style></head><body>
 <section id="login" class="login"><div class="box"><img class="logo" src="./logo.webp" alt="Eventos Piscis"><h1>Bienvenido a Eventos Piscis</h1><p class="muted">Eventos que enamoran</p><div id="err" class="error">Correo o contraseña incorrectos.</div><div class="field"><label>Correo</label><input id="email" type="email"></div><div class="field"><label>Contraseña</label><input id="pass" type="password"></div><button id="loginBtn" class="primary full">Entrar</button><button id="resetBtn" type="button" class="secondary full" style="margin-top:10px">Restablecer contraseña</button>
 </div></section>
