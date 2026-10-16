@@ -242,7 +242,7 @@ body.menu-open .actions{transform:translateX(0)}
 .menu-backdrop{display:none;position:fixed;inset:0;z-index:40;background:rgba(12,25,42,.38);backdrop-filter:blur(1px)}
 body.menu-open .menu-backdrop{display:block}
 body.menu-open{overflow:hidden}
-@media(max-width:760px){.top{padding:10px 12px}.topin{flex-direction:row;align-items:center}.actions{width:min(320px,86vw);display:flex}.nav-group{display:flex}.nav-group button{width:100%;font-size:14px}.brand h1{font-size:19px}}
+@media(max-width:760px){.top{padding:10px 12px}.topin{flex-direction:row;align-items:center;flex-wrap:wrap}.actions{position:static;transform:none!important;transition:none;width:100%;max-height:65vh;overflow:auto;padding:12px;background:#102744;border-radius:12px;box-shadow:none;display:flex}.menu-toggle{display:none}.menu-backdrop{display:none!important}.nav-group{display:flex}.nav-group button{width:100%;font-size:14px}.brand h1{font-size:19px}}
 @media(prefers-reduced-motion:reduce){.actions{transition:none}}
 </style></head><body>
 <section id="login" class="login"><div class="box"><img class="logo" src="./logo.webp" alt="Eventos Piscis"><h1>Bienvenido a Eventos Piscis</h1><p class="muted">Eventos que enamoran</p><div id="err" class="error">Correo o contraseña incorrectos.</div><div class="field"><label>Correo</label><input id="email" type="email"></div><div class="field"><label>Contraseña</label><input id="pass" type="password"></div><button id="loginBtn" class="primary full">Entrar</button><button id="resetBtn" type="button" class="secondary full" style="margin-top:10px">Restablecer contraseña</button>
